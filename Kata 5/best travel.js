@@ -1,59 +1,54 @@
 function chooseBestSum(maxDistance, numberOfTowns, ls) {
-  ls = ls.sort((a, b) => a - b);
-  console.log(ls)
-  let pointers = createPointers(ls, numberOfTowns),
-    currentPointer = pointers.getLastNode(),
-    lastIndexToSearch = ls.length,
-    sum;
-  while (currentPointer != null) {
-    let tempSum = pointers.sumOfElements();
-    if (tempSum > maxDistance) {
-      currentPointer.returnStepBack(ls);
-      lastIndexToSearch = currentPointer.index;
-      currentPointer = currentPointer.previous;
-    } else if (currentPointer.index + 1 < lastIndexToSearch) {
-      sum = tempSum;
-      currentPointer.updateIndexAndNumber(ls);
-    } else {
-      sum = tempSum;
-      lastIndexToSearch--;
-      currentPointer = currentPointer.previous;
+  work = new makeJob(maxDistance, ls, numberOfTowns);
+  console.log(work.getPossibilities())
+}
+class makeJob {
+  constructor(maxDistance, ls, numberOfTowns) {
+    this.maxDistance = maxDistance;
+    this.townsWeHave = ls;
+    this.numberOfTownsWeCanGo = numberOfTowns;
+    this.listPointToTowns = new DoublyLinkedList().createList(
+      ls,
+      numberOfTowns
+    ); 
+    this.possibilities = []
+  }
+  getPossibilities() {
+    let lastNode = this.listPointToTowns.getLastNode();
+    //!this should be the work flow for every possibility
+    let previousNode = lastNode.previous;
+    const IndexToReset = previousNode.index;
+    let previousNodeIndex = previousNode.index;
+    while(this.thereIsSpaceBetween(previousNodeIndex, lastNode.index)) {
+      this.possibilities.push(this.listPointToTowns.sumOfElements());
+      console.log(this.possibilities)
+      previousNode.updateNodeByOne(this.townsWeHave);
+      previousNodeIndex = previousNode.index;
     }
+    this.resetNodeBy(previousNode, IndexToReset);
+    console.log(previousNode)
   }
-  console.log(pointers)
-  return !isNaN(sum) ? sum : null;
-}
-function createPointers(ls, numberOfPointers) {
-  let pointers = new LinkedList();
-  for (let i = 0; i < numberOfPointers; i++) {
-    let node = new Node(ls[i], i);
-    pointers.addNode(node);
+  thereIsSpaceBetween(smallIndex, bigIndex) {
+    if(bigIndex - smallIndex > 0) return true;
+    return false;
   }
-  return pointers;
-}
-class Node {
-  constructor(number, index) {
-    this.previous = null;
-    this.number = number;
-    this.index = index;
-    this.next = null;
-  }
-  updateNumberValue(ls) {
-    this.number = ls[this.index];
-  }
-  updateIndexAndNumber(ls) {
-    this.index += 1;
-    this.updateNumberValue(ls);
-  }
-  returnStepBack(ls) {
-    this.index -= 1;
-    this.updateNumberValue(ls);
+  resetNodeBy(node, index) {
+    node.index = index;
+    node.number = this.townsWeHave[index];
   }
 }
-class LinkedList {
+class DoublyLinkedList {
   constructor() {
     this.head = null;
     this.size = 0;
+  }
+  createList(ls, numberOfNodes) {
+    let pointers = new DoublyLinkedList();
+    for (let i = 0; i < numberOfNodes; i++) {
+      let node = new Node(ls[i], i);
+      pointers.addNode(node);
+    }
+    return pointers;
   }
   addNode(node) {
     if (this.isHeadNull()) {
@@ -96,6 +91,19 @@ class LinkedList {
     this.size++;
   }
 }
+class Node {
+  constructor(number, index) {
+    this.previous = null;
+    this.number = number;
+    this.index = index;
+    this.next = null;
+  }
+  updateNodeByOne(ls) {
+    this.index += 1;
+    this.number = ls[this.index];
+  }
+}
+
 let ts = [142, 159, 234, 260, 295, 460, 460, 495, 497];
 console.log(chooseBestSum(954, 3, ts)); // = 954
 //! what i get = [159, 295, 497] = 951
