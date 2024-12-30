@@ -1,6 +1,7 @@
+// LINK: https://www.codewars.com/kata/55e7280b40e1c4a06d0000aa
 function chooseBestSum(maxDistance, numberOfTowns, ls) {
   work = new makeJob(maxDistance, ls, numberOfTowns);
-  console.log(work.getPossibilities())
+  return work.getResult();
 }
 class makeJob {
   constructor(maxDistance, ls, numberOfTowns) {
@@ -10,27 +11,53 @@ class makeJob {
     this.listPointToTowns = new DoublyLinkedList().createList(
       ls,
       numberOfTowns
-    ); 
-    this.possibilities = []
+    );
+    this.possibilities = [];
   }
-  getPossibilities() {
-    let lastNode = this.listPointToTowns.getLastNode();
-    //!this should be the work flow for every possibility
-    let previousNode = lastNode.previous;
-    const IndexToReset = previousNode.index;
-    let previousNodeIndex = previousNode.index;
-    while(this.thereIsSpaceBetween(previousNodeIndex, lastNode.index)) {
-      this.possibilities.push(this.listPointToTowns.sumOfElements());
-      console.log(this.possibilities)
-      previousNode.updateNodeByOne(this.townsWeHave);
-      previousNodeIndex = previousNode.index;
+  getResult() {
+    let result = this.getMaxNumber();
+    if (result === -Infinity) return null;
+    return result;
+  }
+  getMaxNumber() {
+    this.getPossibilities();
+    return Math.max(...this.possibilities);
+  }
+  getPossibilities(
+    lNode = this.listPointToTowns.getLastNode(),
+    lIndexToSearch = this.townsWeHave.length
+  ) {
+    let lastNode = lNode;
+    let lastIndexToSearch = lIndexToSearch;
+    if (this.numberOfTownsWeCanGo === 1) {
+      while (lastNode.index < lastIndexToSearch) {
+        this.checkTheSum();
+        lastNode.updateNodeByOne(this.townsWeHave);
+      }
+      return;
     }
-    this.resetNodeBy(previousNode, IndexToReset);
-    console.log(previousNode)
+    let previousNode = lastNode.previous;
+    if (previousNode == null) return;
+    let previousNodeIndex = previousNode.index;
+    const IndexToReset = previousNode.index;
+    while (lastNode.index < lastIndexToSearch) {
+      while (this.thereIsSpaceBetween(previousNodeIndex, lastNode.index)) {
+        this.checkTheSum();
+        previousNode.updateNodeByOne(this.townsWeHave);
+        this.getPossibilities(previousNode, lastNode.index);
+        previousNodeIndex = previousNode.index;
+      }
+      this.resetNodeBy(previousNode, IndexToReset);
+      lastNode.updateNodeByOne(this.townsWeHave);
+    }
   }
   thereIsSpaceBetween(smallIndex, bigIndex) {
-    if(bigIndex - smallIndex > 0) return true;
+    if (bigIndex - smallIndex > 0) return true;
     return false;
+  }
+  checkTheSum() {
+    let sum = this.listPointToTowns.sumOfElements();
+    if (sum <= this.maxDistance) this.possibilities.push(sum);
   }
   resetNodeBy(node, index) {
     node.index = index;
@@ -100,11 +127,14 @@ class Node {
   }
   updateNodeByOne(ls) {
     this.index += 1;
-    this.number = ls[this.index];
+    if (this.index == ls.length) this.number = ls[this.index - 1];
+    else this.number = ls[this.index];
   }
 }
 
 let ts = [142, 159, 234, 260, 295, 460, 460, 495, 497];
-console.log(chooseBestSum(954, 3, ts)); // = 954
-//! what i get = [159, 295, 497] = 951
-//! I should get = [460 + 260 + 234] = 954
+console.log(chooseBestSum(954, 3, ts));
+ts = [50];
+console.log(chooseBestSum(954, 3, ts));
+ts = [91, 74, 73, 85, 73, 81, 87];
+console.log(chooseBestSum(331, 1, ts));
