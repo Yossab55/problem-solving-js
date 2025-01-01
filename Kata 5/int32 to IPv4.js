@@ -7,3 +7,4 @@ function int32ToIp(int32) {
 console.log(int32ToIp(2149583361));
 console.log(int32ToIp(32));
 console.log(int32ToIp(2 ** 32 - 1));
+//notice for my need a js corse about unsinged and uint 32 8 16 
