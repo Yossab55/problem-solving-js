@@ -1,5 +1,5 @@
 // code wars = https://www.codewars.com/kata/5547cc7dcad755e480000004
-// solve in git hub = 
+// solve in git hub = https://github.com/Yossab55/problem-solving-js/blob/main/Kata%205/Is%20my%20friend%20cheating.js
 function removeNb(n) {
   return getAllPossibleCombination(n);
 }
