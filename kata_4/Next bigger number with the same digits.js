@@ -1,4 +1,5 @@
 // link in code wars: https://www.codewars.com/kata/55983863da40caa2c900004e
+// my solve: https://github.com/Yossab55/problem-solving-js/blob/main/kata_4/Next%20bigger%20number%20with%20the%20same%20digits.js
 function nextBigger(n) {
   let result = new NextBigNumber(n);
   
