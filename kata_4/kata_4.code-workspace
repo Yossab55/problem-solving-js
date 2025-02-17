@@ -1,0 +1,14 @@
+{
+  "folders": [
+	{
+		"path": "."
+	}
+],
+  "settings": {
+    "java.project.sourcePaths": [""],
+    "liveServer.settings.multiRootWorkspaceName": "kata_4",
+    "files.associations": {
+      "functional": "cpp"
+    }
+  }
+}
