@@ -1,23 +1,54 @@
+//@ problem in codeWars = https://www.codewars.com/kata/51c8e37cee245da6b40000bd
+//@ my solve in github =
 function solution(text, markers) {
-  if(markers.length == 0) {
+  if (markers.length == 0) {
     return text.trimEnd();
   }
   let chunks = text.split("\n");
-  let collection = []
-  for(let i = 0; i < chunks.length; i++) {
-    let splittedOnSpace = chunks[i].split(' ');
-    let tempArr = [];
-    for(let j = 0; j < splittedOnSpace.length; j++) {
-      console.log(splittedOnSpace[j])
-      if(markers.indexOf(splittedOnSpace[j]) != -1) {
-        break;
-      }
-      tempArr.push(splittedOnSpace[j]);
-    }
-    collection.push(tempArr.join(' '));
+  let collection = [];
+  for (let i = 0; i < chunks.length; i++) {
+    let indexOfMarker = getIndexFrom(markers, chunks[i]);
+    collection.push(getRemainString(chunks[i], indexOfMarker));
   }
-  return collection.join('\n');
+  return collection.join("\n");
 }
-
-console.log(solution("aa ! bb\ncc # dd", ["#", "!"]));
-console.log(solution("aa ! bb cc dd ", []));
+function getIndexFrom(markers, word) {
+  let index = Infinity
+  for (let i = 0; i < markers.length; i++) {
+    let checkIndex = word.indexOf(markers[i]);
+    if (checkIndex != -1) {
+      if(checkIndex < index) index = checkIndex;
+    }
+  }
+  return (index == Infinity) ? word.length : index;
+}
+function getRemainString(word, index) {
+  let result = "";
+  for (let i = 0; i < index; i++) {
+    result += word[i];
+  }
+  return result.trimEnd();
+}
+console.log(solution("aa ! bb\ncc# dd", ["#", "!"]));
+console.log(
+  solution(
+    "DO!B ~gOBT*DInc/\n!cQjlTzYe+grPH+tYQ*~+",[
+    "~",
+    "!",
+    "\\",
+    "*",
+    "/",
+    "^",
+    "#",
+    "+",
+    "-",
+    "%"
+  ])
+);
+// clever one 
+// function solution(input, markers) {
+//   return input
+//     .split("\n")
+//     .map((str) => markers.reduce((s, m) => s.split(m)[0], str).trimEnd())
+//     .join("\n");
+// }
