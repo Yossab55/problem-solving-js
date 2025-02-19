@@ -1,5 +1,5 @@
 //@ problem in codeWars = https://www.codewars.com/kata/51c8e37cee245da6b40000bd
-//@ my solve in github =
+//@ my solve in github = https://github.com/Yossab55/problem-solving-js/blob/main/kata_4/strip_comments.js
 function solution(text, markers) {
   if (markers.length == 0) {
     return text.trimEnd();
